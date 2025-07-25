@@ -1,4 +1,4 @@
-package part_2;
+package part_1.linkedlist;
 
 import java.util.Collection;
 import java.util.Iterator;

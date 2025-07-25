@@ -1,7 +1,4 @@
-package part_1;
-
-import java.util.Collection;
-import java.util.LinkedList;
+package part_1.hashset;
 
 public class Test {
 
