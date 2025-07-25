@@ -3,8 +3,18 @@ package part_2;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+record Book(String author, String title, int yearOfPublication, int pages) {
+}
+
+record Student(String name, List<Book> books) {
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
 
 public class Test {
     public static void main(String[] args) {
@@ -72,22 +82,16 @@ public class Test {
 
 
         students.stream()
-                .peek(student -> System.out.println("Книги " + student.getName() + ": " + student.getBooks()))
-                .map(Student::getBooks)
+                .peek(System.out::println)
+                .map(Student::books)
                 .flatMap(Collection::stream)
                 .sorted(Comparator.comparingInt(Book::pages))
                 .distinct()
                 .filter(book -> book.yearOfPublication() > 2000)
                 .limit(3)
-                .mapToInt(Book::pages)
-                .findFirst()???
-                .forEach(System.out::println);
-
-        System.out.println("=========================================================");
-
-        /*
-        * При помощи методов короткого замыкания (почитайте самостоятельно что это такое) вернуть Optional от книги
-При помощи методов получения значения из Optional вывести в консоль год выпуска найденной книги, либо запись о том, что такая книга отсутствует*/
+                .peek(book -> System.out.println(book.title() + " опубликована в " + book.yearOfPublication() + " году"))
+                .findFirst()
+                        .ifPresentOrElse(System.out::println, () -> System.out.println("Нет такой книги"));
 
     }
 }
