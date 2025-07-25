@@ -1,5 +1,6 @@
 package part_2;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -26,18 +27,20 @@ public class MyLinkedList<T> implements Iterable<T>{
         if(head == null){
             head = new Node<>(value);
             tail = head;
-            size++;
         }else {
             tail.setNext(new Node<>(value));
             tail = tail.next;
-            size++;
         }
+        size++;
+    }
+
+    public void addAll(Collection<? extends T> collection){
+        collection.forEach(this::add);
     }
 
     public T get(int index) throws IndexOutOfBoundsException{
-        if(index > size - 1){
-            throw new IndexOutOfBoundsException("You entered too large index");
-        }
+        checkInputIndex(index);
+
         Node<T> start = head;
         for(int i=0; i<index; i++){
             start = start.next;
@@ -46,23 +49,42 @@ public class MyLinkedList<T> implements Iterable<T>{
     }
 
     private Node<T> getNode(int index) throws IndexOutOfBoundsException{
-        if(index > size - 1){
-            throw new IndexOutOfBoundsException("You entered too large index");
-        }
+        checkInputIndex(index);
+
         Node<T> start = head;
-        for(int i=0; i<=index; i++){
+        for(int i=0; i<index; i++){
             start = start.next;
         }
         return start;
     }
 
-    public T remove(int index){
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Invalid index");
+    public T remove(int index) throws IndexOutOfBoundsException{
+        checkInputIndex(index);
+        T removedValue;
+
+        if (index == 0){
+            removedValue = head.value;
+            head = head.next;
+        } else if(index == (size - 1)){
+            removedValue = tail.value;
+            Node<T> nodeBeforeRemovingElement = getNode(index-1);
+            nodeBeforeRemovingElement.setNext(null);
+            tail = nodeBeforeRemovingElement;
+        } else {
+            Node<T> nodeBeforeRemovingElement = getNode(index-1);
+            removedValue = nodeBeforeRemovingElement.next.value;
+            nodeBeforeRemovingElement.setNext(nodeBeforeRemovingElement.next.next);
         }
-        Node<T> nodeBeforeRemovingElement = getNode(index-1);
-        nodeBeforeRemovingElement.setNext(nodeBeforeRemovingElement.next.next);
-        return get(index);
+        size--;
+        return removedValue;
+    }
+
+
+
+    private void checkInputIndex(int index) throws IndexOutOfBoundsException{
+        if(index < 0 || index > (size - 1)){
+            throw new IndexOutOfBoundsException("Your entered an index, that is less than 0 or greater than last index");
+        }
     }
 
     @Override
