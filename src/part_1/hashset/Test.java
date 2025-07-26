@@ -1,10 +1,13 @@
 package part_1.hashset;
 
+import java.util.ArrayList;
+
 public class Test {
 
 
     public static void main(String[] args) {
         MyHashSet<String> hashSet = new MyHashSet<>();
+//        ArrayList
         System.out.println("Попытка добавить One: " + hashSet.add("One"));
         System.out.println("Попытка добавить One: " + hashSet.add("One"));
         System.out.println("Попытка добавить Two: " + hashSet.add("Two"));
